@@ -6,6 +6,8 @@ type NotificationType string
 const (
 	// Initial purchase of the subscription.
 	NotificationTypeInitialBuy NotificationType = "INITIAL_BUY"
+	// A customer’s subscription has successfully auto-renewed.
+	NotificationTypeDidRenew NotificationType = "DID_RENEW"
 	// Subscription was canceled by Apple customer support.
 	NotificationTypeCancel NotificationType = "CANCEL"
 	// Automatic renewal was successful for an expired subscription.
@@ -21,6 +23,8 @@ const (
 	NotificationTypeDidChangeRenewalStatus NotificationType = "DID_CHANGE_RENEWAL_STATUS"
 	// Subscription failed to renew due to a billing issue.
 	NotificationTypeDidFailToRenew NotificationType = "DID_FAIL_TO_RENEW"
+	// App Store successfully refunded a transaction.
+	NotificationTypeRefund NotificationType = "REFUND"
 )
 
 type NotificationEnvironment string
@@ -81,7 +85,7 @@ type SubscriptionNotification struct {
 
 	// This is the same as the Subscription Expiration Intent in the receipt.
 	// Posted only if notification_type is RENEWAL or INTERACTIVE_RENEWAL.
-	ExpirationIntent string `json:"expiration_intent"`
+	ExpirationIntent int `json:"expiration_intent"`
 
 	// Auto renew info
 	AutoRenewStatus    string `json:"auto_renew_status"` // false or true
@@ -97,6 +101,12 @@ type SubscriptionNotification struct {
 
 	// In the new notifications above properties latest_receipt, latest_receipt_info are moved under this one
 	UnifiedReceipt NotificationUnifiedReceipt `json:"unified_receipt"`
+
+	// A string that contains the app bundle ID.
+	BID string `json:"bid"`
+
+	// A string that contains the app bundle version.
+	BVRS string `json:"bvrs"`
 
 	// Posted only if the notification_type is RENEWAL or CANCEL or if renewal failed and subscription expired.
 	// Deprecated: see details: https://developer.apple.com/documentation/appstoreservernotifications/ .
